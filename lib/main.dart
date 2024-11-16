@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:swifty_companion/login_button.dart';
+import 'package:swifty_companion/profile.dart';
+import 'package:swifty_companion/providers/intra_api_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:swifty_companion/search.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -12,7 +16,14 @@ Future<void> main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-  runApp(const MyApp());
+    runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(
+        create: (_) => IntraApiProvider(),
+      ),
+    ],
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -28,6 +39,10 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: const MyHomePage(title: '42 swifty companions'),
+      routes: {
+        "/profile": (context) => const UserProfile(),
+        "/search": (context) => SearchPage(),
+      },
     );
   }
 }
