@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:swifty_companion/main_user_info.dart';
 import 'package:swifty_companion/providers/intra_api_provider.dart';
+import 'package:swifty_companion/user_projects.dart';
 import 'package:swifty_companion/user_skills.dart';
 
 import 'models/intra_user_full.dart';
@@ -67,7 +68,9 @@ class UserProfileState extends State<UserProfile> {
                       isActive: user.isActive,
                     ),
                     const SizedBox(height: 16),
-                    UserSkills(skills: user.skills)
+                    UserSkills(skills: user.skills),
+                    const SizedBox(height: 16),
+                    UserProjects(projects: user.projects),
                   ],
                 );
               } else {

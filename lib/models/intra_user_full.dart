@@ -10,6 +10,7 @@ class IntraUserFull extends IntraUserShort {
   final String level;
   final bool isActive;
   final List<Skill> skills;
+  final List<Project> projects;
 
   IntraUserFull({
     required super.id,
@@ -23,6 +24,7 @@ class IntraUserFull extends IntraUserShort {
     required this.level,
     this.isActive = false,
     this.skills = const [],
+    this.projects = const [],
   });
 
   factory IntraUserFull.fromJson(Map<String, dynamic> json) {
@@ -49,6 +51,15 @@ class IntraUserFull extends IntraUserShort {
             .toList()
         : [];
 
+        List<dynamic> projectList = (json['projects_users'] as List<dynamic>)
+        .where((project) => project['status'] == 'finished')
+        .toList();
+
+    // Sort projects by updatedAt from most recent to oldest
+    projectList.sort((a, b) => DateTime.parse(b['updated_at']).compareTo(DateTime.parse(a['updated_at'])));
+
+    List<Project> projects = projectList.map((project) => Project.fromJson(project)).toList();
+
     return IntraUserFull(
       id: json['id'],
       login: json['login'],
@@ -62,6 +73,7 @@ class IntraUserFull extends IntraUserShort {
       level: level.toString(),
       isActive: json['active?'],
       skills: skills,
+      projects: projects,
     );
   }
 }
@@ -84,6 +96,22 @@ class Skill {
       name: json['name'],
       level: level.toStringAsFixed(2),
       percentage: percentage,
+    );
+  }
+}
+
+class Project {
+  final String name;
+  final int? grade;
+  final bool validated;
+
+  Project({required this.name, this.grade, required this.validated});
+
+  factory Project.fromJson(Map<String, dynamic> json) {
+    return Project(
+      name: json['project']['name'],
+      grade: json['final_mark'] ?? 0,
+      validated: json['validated?'] ?? false,
     );
   }
 }

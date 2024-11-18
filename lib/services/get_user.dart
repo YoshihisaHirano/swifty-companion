@@ -11,9 +11,7 @@ Future<IntraUserFull?> getIntraUser(int userId, String token) async {
       "Authorization": createAuthHeader(token),
     });
     if (response.statusCode == 200) {
-      print(token);
       final Map<String, dynamic> user = jsonDecode(response.body);
-      print(user);
       return IntraUserFull.fromJson(user);
     }
   } catch (e) {

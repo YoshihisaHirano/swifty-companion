@@ -22,8 +22,11 @@ class UserSkills extends StatelessWidget {
                 width: itemWidth,
                 margin: const EdgeInsets.all(4.0),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary,
                   borderRadius: BorderRadius.circular(8.0),
+                  border: Border.all(
+                    color: Theme.of(context).colorScheme.primaryFixedDim,
+                    width: 2,
+                  ),
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -33,7 +36,7 @@ class UserSkills extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.onPrimaryFixed,
+                        color: Theme.of(context).colorScheme.tertiaryFixed,
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -43,7 +46,7 @@ class UserSkills extends StatelessWidget {
                       style:  TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
-                        color: Theme.of(context).colorScheme.onPrimaryFixed,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -53,7 +56,7 @@ class UserSkills extends StatelessWidget {
                       style:  TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
-                        color: Theme.of(context).colorScheme.onPrimaryFixed,
+                        color: Theme.of(context).colorScheme.tertiaryFixed,
                       ),
                       textAlign: TextAlign.center,
                     ),
