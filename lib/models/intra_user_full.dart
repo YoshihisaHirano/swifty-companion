@@ -2,12 +2,54 @@ import 'package:swifty_companion/models/intra_user_short.dart';
 
 class IntraUserFull extends IntraUserShort {
   final String email;
+  final String? phone;
+  final int wallet;
+  final String location;
+  final String level;
+  final bool isActive;
 
   IntraUserFull({
     required super.id,
     required super.login,
-    required String super.imageUrl,
+    required super.imageUrl,
     required this.email,
     required super.displayName,
+    this.phone,
+    required this.wallet,
+    required this.location,
+    required this.level,
+    this.isActive = false,
   });
+
+  factory IntraUserFull.fromJson(Map<String, dynamic> json) {
+    final campuses = json['campus'] as List<dynamic>;
+    final activeCampus = campuses.firstWhere(
+      (campus) => campus['active'] == true,
+      orElse: () => campuses.first,
+    );
+    final country = activeCampus['country'];
+    final name = activeCampus['name'];
+    final location = json['location'];
+    final fullLocation = '$country, $name, seat: ${location ?? 'Unavailable'}';
+
+    final cursusUsers = json['cursus_users'] as List<dynamic>;
+    final mainCursus = cursusUsers.firstWhere(
+        (cursus) => cursus['cursus']['kind'] == 'main',
+        orElse: () => null);
+    final level = mainCursus != null ? mainCursus['level'] as double : "Unavailable";
+
+    return IntraUserFull(
+      id: json['id'],
+      login: json['login'],
+      imageUrl:
+          json['image'] != null ? UserImage.fromJson(json['image']).link : null,
+      email: json['email'],
+      displayName: json['displayname'],
+      phone: json['phone'],
+      wallet: json['wallet'],
+      location: fullLocation,
+      level: level.toString(),
+      isActive: json['active?'],
+    );
+  }
 }

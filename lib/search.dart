@@ -5,12 +5,8 @@ import 'package:swifty_companion/models/intra_user_short.dart';
 import 'package:swifty_companion/providers/intra_api_provider.dart';
 
 class SearchPage extends StatefulWidget {
-  // final Function() clearError;
-  // final Function(String) setError;
-
   const SearchPage({
     super.key,
-    // required this.clearError, required this.setError
   });
 
   @override
@@ -23,11 +19,13 @@ class _SearchPageState extends State<SearchPage> {
     final provider = Provider.of<IntraApiProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Search 42 users'),
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: const Text('Search 42 users', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600)),
         automaticallyImplyLeading: false,
       ),
       body: Column(
         children: [
+          const SizedBox(height: 16),
           TypeAheadField(
             builder: (context, controller, focusNode) {
               return TextField(
@@ -43,8 +41,9 @@ class _SearchPageState extends State<SearchPage> {
             },
             onSelected: (IntraUserShort? value) {
               if (value?.id != null) {
-                  provider.setSelectedUser(value!.id);
+                provider.setSelectedUser(value!.id);
               }
+              Navigator.of(context).pushNamed('/profile');
             },
             itemBuilder: (BuildContext context, IntraUserShort value) {
               return ListTile(
@@ -57,13 +56,18 @@ class _SearchPageState extends State<SearchPage> {
                           fit: BoxFit.cover,
                         ),
                       )
-                    : const Icon(Icons.person, size: 48,),
+                    : const Icon(
+                        Icons.person,
+                        size: 48,
+                      ),
                 title: Text(value.displayName),
                 subtitle: Text(value.login),
               );
             },
             suggestionsCallback: (String search) {
-              return provider.searchUsers(search);
+              if (search.isNotEmpty) {
+                return provider.searchUsers(search);
+              }
             },
           ),
         ],
