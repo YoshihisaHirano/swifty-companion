@@ -1,5 +1,7 @@
 import 'package:swifty_companion/models/intra_user_short.dart';
 
+const maxSkillLevel = 20;
+
 class IntraUserFull extends IntraUserShort {
   final String email;
   final String? phone;
@@ -7,6 +9,7 @@ class IntraUserFull extends IntraUserShort {
   final String location;
   final String level;
   final bool isActive;
+  final List<Skill> skills;
 
   IntraUserFull({
     required super.id,
@@ -19,6 +22,7 @@ class IntraUserFull extends IntraUserShort {
     required this.location,
     required this.level,
     this.isActive = false,
+    this.skills = const [],
   });
 
   factory IntraUserFull.fromJson(Map<String, dynamic> json) {
@@ -36,7 +40,14 @@ class IntraUserFull extends IntraUserShort {
     final mainCursus = cursusUsers.firstWhere(
         (cursus) => cursus['cursus']['kind'] == 'main',
         orElse: () => null);
-    final level = mainCursus != null ? mainCursus['level'] as double : "Unavailable";
+    final level =
+        mainCursus != null ? mainCursus['level'] as double : "Unavailable";
+
+    List<Skill> skills = mainCursus != null
+        ? (mainCursus['skills'] as List<dynamic>)
+            .map((skill) => Skill.fromJson(skill))
+            .toList()
+        : [];
 
     return IntraUserFull(
       id: json['id'],
@@ -50,6 +61,29 @@ class IntraUserFull extends IntraUserShort {
       location: fullLocation,
       level: level.toString(),
       isActive: json['active?'],
+      skills: skills,
+    );
+  }
+}
+
+class Skill {
+  final String name;
+  final String level;
+  final int percentage;
+
+  Skill({
+    required this.name,
+    required this.level,
+    required this.percentage,
+  });
+
+  factory Skill.fromJson(Map<String, dynamic> json) {
+    final level = json['level'] as double;
+    final percentage = (level / maxSkillLevel * 100).round();
+    return Skill(
+      name: json['name'],
+      level: level.toStringAsFixed(2),
+      percentage: percentage,
     );
   }
 }
